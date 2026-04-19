@@ -8,7 +8,31 @@
 <style>
 body{margin:0;font-family:'Segoe UI',Arial;background:linear-gradient(135deg,#0f0f0f,#1c1c1c);color:#fff}
 
-header{display:flex;justify-content:center;align-items:center;padding:20px;background:rgba(20,20,20,.9);backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(0,0,0,.5)}
+header{
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+background:rgba(20,20,20,.9);
+backdrop-filter:blur(10px);
+box-shadow:0 4px 20px rgba(0,0,0,.5);
+position:relative;
+}
+
+.cart{
+position:absolute;
+right:20px;
+cursor:pointer;
+font-size:18px;
+}
+
+.badge{
+background:#4caf50;
+border-radius:50%;
+padding:2px 7px;
+margin-left:5px;
+font-size:12px;
+}
 
 input{padding:10px;width:100%;margin-top:5px;border-radius:10px;border:none;background:#1f1f1f;color:white}
 
@@ -28,6 +52,10 @@ button{border:none;border-radius:10px;padding:10px;cursor:pointer;font-weight:bo
 
 <header>
 <h2>Distribuidora PRO</h2>
+
+<div class="cart" onclick="goToCart()">
+🛒 <span class="badge" id="cartCount">0</span>
+</div>
 </header>
 
 <input type="text" id="search" placeholder="Buscar productos..." onkeyup="filterProducts()">
@@ -36,13 +64,44 @@ button{border:none;border-radius:10px;padding:10px;cursor:pointer;font-weight:bo
 
 <script>
 
-/* ✅ PRODUCTOS CON LINK */
+/* PRODUCTOS */
 const products=[
 {id:1,name:"Audífonos Bluetooth",img:"https://via.placeholder.com/300",link:"audifonos.html"},
 {id:2,name:"Smartwatch Pro",img:"https://via.placeholder.com/300",link:"smartwatch.html"},
 {id:3,name:"Cargador Rápido",img:"https://via.placeholder.com/300",link:"cargador.html"},
 {id:4,name:"Bocina Portátil",img:"https://via.placeholder.com/300",link:"bocina.html"},
 ];
+
+/* 🛒 CARRITO GLOBAL */
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function saveCart(){
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function updateCartCount(){
+  document.getElementById("cartCount").innerText = cart.length;
+}
+
+/* AGREGAR PRODUCTO */
+function addToCart(product){
+  const item = cart.find(i => i.id === product.id);
+
+  if(item){
+    item.qty++;
+  }else{
+    cart.push({...product, qty:1});
+  }
+
+  saveCart();
+  updateCartCount();
+  alert("Agregado al carrito 🛒");
+}
+
+/* IR AL CARRITO */
+function goToCart(){
+  window.location.href = "cart.html";
+}
 
 /* RENDER */
 function renderProducts(list){
@@ -55,6 +114,10 @@ container.innerHTML+=`
 <img src="${p.img}">
 <h3>${p.name}</h3>
 
+<button class="add" onclick='addToCart(${JSON.stringify(p)})'>
+Agregar al carrito
+</button>
+
 <button class="add" onclick="goToProduct('${p.link}')">
 Ver producto
 </button>
@@ -63,12 +126,12 @@ Ver producto
 });
 }
 
-/* REDIRECCIÓN A PÁGINA REAL */
+/* REDIRECCIÓN */
 function goToProduct(link){
   window.location.href = link;
 }
 
-/* 🔍 BUSCADOR */
+/* BUSCADOR */
 function filterProducts(){
   const value = document.getElementById("search").value.trim().toLowerCase();
 
@@ -84,10 +147,11 @@ function filterProducts(){
   renderProducts(filtered);
 }
 
-/* INICIAL */
+/* INIT */
 renderProducts(products);
+updateCartCount();
 
 </script>
 
 </body>
-</html></html>
+</html>
