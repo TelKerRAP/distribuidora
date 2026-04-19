@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Factura - Pedido</title>
+
+<style>
+body{
+    background:#0f0f0f;
+    color:#fff;
+    font-family:'Segoe UI', sans-serif;
+    padding:20px;
+}
+
+/* CONTENEDOR FACTURA */
+.invoice{
+    max-width:800px;
+    margin:auto;
+    background:#1a1a1a;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* HEADER */
+.header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.logo{
+    font-size:20px;
+    font-weight:bold;
+    color:#00ffcc;
+}
+
+.info{
+    text-align:right;
+    font-size:14px;
+}
+
+/* TABLA */
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th, td{
+    padding:10px;
+    text-align:left;
+    border-bottom:1px solid #333;
+}
+
+th{
+    color:#00ffcc;
+}
+
+/* TOTAL */
+.total{
+    text-align:right;
+    margin-top:20px;
+    font-size:20px;
+}
+
+/* BOTONES */
+.actions{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+}
+
+button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.wsp{
+    background:#25D366;
+    color:#fff;
+}
+
+.print{
+    background:#00ffcc;
+    color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<div class="invoice">
+
+    <div class="header">
+        <div class="logo">Distribuidora PRO</div>
+
+        <div class="info">
+            Fecha: <span id="fecha"></span><br>
+            Pedido #: <span id="pedido"></span>
+        </div>
+    </div>
+
+    <h2>🧾 Cotización / Factura</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="cartItems"></tbody>
+    </table>
+
+    <div class="total" id="total"></div>
+
+    <div class="actions">
+        <button class="wsp" onclick="sendWhatsApp()">Enviar por WhatsApp</button>
+        <button class="print" onclick="window.print()">🖨️ Imprimir</button>
+    </div>
+
+</div>
+
+<script src="cart.js"></script>
+
+<script>
+
+/* DATOS */
+document.getElementById("fecha").innerText = new Date().toLocaleDateString();
+document.getElementById("pedido").innerText = Math.floor(Math.random()*100000);
+
+/* RENDER FACTURA */
+function renderCart(){
+    const container = document.getElementById("cartItems");
+    container.innerHTML = "";
+
+    let total = 0;
+
+    cart.forEach(item=>{
+        let precio = item.price || 0;
+        let subtotal = precio * item.qty;
+        total += subtotal;
+
+        container.innerHTML += `
+        <tr>
+            <td>${item.name}</td>
+            <td>${item.qty}</td>
+            <td>$${precio}</td>
+            <td>$${subtotal}</td>
+        </tr>
+        `;
+    });
+
+    document.getElementById("total").innerText = "Total: $" + total;
+}
+
+/* WHATSAPP */
+function sendWhatsApp(){
+    let msg = "🧾 Cotización:%0A";
+    
+    cart.forEach(i=>{
+        msg += `- ${i.name} x${i.qty}%0A`;
+    });
+
+    msg += `%0ATotal: $${getTotal()}`;
+
+    window.open(`https://wa.me/52XXXXXXXXXX?text=${msg}`);
+}
+
+renderCart();
+
+</script>
+
+</body>
+</html>
