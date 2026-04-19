@@ -35,13 +35,16 @@ button{border:none;border-radius:10px;padding:10px;cursor:pointer;font-weight:bo
 <div class="grid" id="productList"></div>
 
 <script>
+
+/* ✅ PRODUCTOS CON LINK */
 const products=[
-{id:1,name:"Audífonos Bluetooth",img:"https://via.placeholder.com/300"},
-{id:2,name:"Smartwatch Pro",img:"https://via.placeholder.com/300"},
-{id:3,name:"Cargador Rápido",img:"https://via.placeholder.com/300"},
-{id:4,name:"Bocina Portátil",img:"https://via.placeholder.com/300"},
+{id:1,name:"Audífonos Bluetooth",img:"https://via.placeholder.com/300",link:"audifonos.html"},
+{id:2,name:"Smartwatch Pro",img:"https://via.placeholder.com/300",link:"smartwatch.html"},
+{id:3,name:"Cargador Rápido",img:"https://via.placeholder.com/300",link:"cargador.html"},
+{id:4,name:"Bocina Portátil",img:"https://via.placeholder.com/300",link:"bocina.html"},
 ];
 
+/* RENDER */
 function renderProducts(list){
 const container=document.getElementById("productList");
 container.innerHTML="";
@@ -52,7 +55,7 @@ container.innerHTML+=`
 <img src="${p.img}">
 <h3>${p.name}</h3>
 
-<button class="add" onclick="goToProduct(${p.id})">
+<button class="add" onclick="goToProduct('${p.link}')">
 Ver producto
 </button>
 
@@ -60,11 +63,12 @@ Ver producto
 });
 }
 
-function goToProduct(id){
-  window.location.href = "Kraft.html?id=" + id;
+/* REDIRECCIÓN A PÁGINA REAL */
+function goToProduct(link){
+  window.location.href = link;
 }
 
-/* 🔍 BUSCADOR FUNCIONAL */
+/* 🔍 BUSCADOR */
 function filterProducts(){
   const value = document.getElementById("search").value.trim().toLowerCase();
 
@@ -82,7 +86,8 @@ function filterProducts(){
 
 /* INICIAL */
 renderProducts(products);
+
 </script>
 
 </body>
-</html>
+</html></html>
