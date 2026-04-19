@@ -45,23 +45,42 @@ const products=[
 function renderProducts(list){
 const container=document.getElementById("productList");
 container.innerHTML="";
+
 list.forEach(p=>{
 container.innerHTML+=`
 <div class="card">
 <img src="${p.img}">
 <h3>${p.name}</h3>
 
-<button class="add" onclick="goToProduct('${p.id}')">
+<button class="add" onclick="goToProduct(${p.id})">
 Ver producto
 </button>
 
 </div>`;
 });
 }
+
 function goToProduct(id){
   window.location.href = "Kraft.html?id=" + id;
 }
 
+/* 🔍 BUSCADOR FUNCIONAL */
+function filterProducts(){
+  const value = document.getElementById("search").value.trim().toLowerCase();
+
+  if(value === ""){
+    renderProducts(products);
+    return;
+  }
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(value)
+  );
+
+  renderProducts(filtered);
+}
+
+/* INICIAL */
 renderProducts(products);
 </script>
 
